@@ -394,7 +394,7 @@ void ToggleKeyDown( kbutton_t *b ) {
 		return;
 	}
 
-	if (b->state&1) {	// toggle
+	if (b->state&BUTTON_DOWN) {	// toggle
 		b->state &= ~BUTTON_DOWN; // now up
 		b->state |= IMPULSE_UP;  // impulse up
 	} else
@@ -429,6 +429,7 @@ void ToggleKeyUp( kbutton_t *b ) {
 }
 
 cvar_t	*in_toggleCrouch;
+int crouched = 0;
 #endif
 
 void IN_BreakDown( void )	{ KeyDown( &in_break ); };
@@ -469,8 +470,10 @@ void IN_UseUp( void )	{ KeyUp( &in_use ); }
 #ifdef PANDORA
 static void IN_JumpDown( void ) {
 	if (in_toggleCrouch->value) {
-		in_duck.state = 0; KeyDown( &in_jump );
-	} else KeyDown(&in_up);
+		KeyDown( &in_jump ); 
+		if (!crouched)
+			in_duck.state = 0;
+	} else KeyDown(&in_jump);
 }
 #else
 void IN_JumpDown( void )	{ KeyDown( &in_jump ); }
@@ -478,11 +481,20 @@ void IN_JumpDown( void )	{ KeyDown( &in_jump ); }
 void IN_JumpUp( void )	{ KeyUp( &in_jump ); }
 #ifdef PANDORA
 static void IN_DuckDown( void ) {
-	if (in_toggleCrouch->value) ToggleKeyDown( &in_duck );
+	if (in_toggleCrouch->value) {
+		crouched = (in_duck.state&BUTTON_DOWN)?1:0;
+		ToggleKeyDown( &in_duck );
+	}
 	else KeyDown(&in_duck);
 }
 static void IN_DuckUp( void ) {
-	if (in_toggleCrouch->value) ToggleKeyUp( &in_duck );
+	if (in_toggleCrouch->value) 
+		if (crouched) {
+			crouched = 0;
+			KeyUp( &in_duck );
+		} 
+		else
+			ToggleKeyUp( &in_duck );
 	else KeyUp(&in_duck);
 }
 #else
