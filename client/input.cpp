@@ -369,6 +369,68 @@ void KeyUp( kbutton_t *b )
 	b->state |= IMPULSE_UP;	// impulse up
 }
 
+#ifdef PANDORA
+void ToggleKeyDown( kbutton_t *b ) {
+	int k;
+	char    *c;
+	
+	c = CMD_ARGV( 1 );
+	if ( c[0] ) {
+		k = atoi( c );
+	} else {
+		k = -1;     // typed manually at the console for continuous down
+	}
+
+	if ( k == b->down[0] || k == b->down[1] ) {
+		return;     // repeating key
+	}
+
+	if ( !b->down[0] ) {
+		b->down[0] = k;
+	} else if ( !b->down[1] ) {
+		b->down[1] = k;
+	} else {
+		ALERT( at_aiconsole, "Three keys down for a button '%c' '%c' '%c'!\n", b->down[0], b->down[1], c );
+		return;
+	}
+
+	if (b->state&1) {	// toggle
+		b->state &= ~BUTTON_DOWN; // now up
+		b->state |= IMPULSE_UP;  // impulse up
+	} else
+		b->state |= (BUTTON_DOWN|IMPULSE_DOWN);// down + impulse
+}
+
+void ToggleKeyUp( kbutton_t *b ) {
+	int k;
+	char    *c;
+
+	c = CMD_ARGV( 1 );
+	if ( c[0] ) {
+		k = atoi( c );
+	} else {
+		// typed manually at the console, assume for unsticking, so clear all
+		b->down[0] = b->down[1] = 0;
+		b->state = 4;
+		return;
+	}
+
+	if ( b->down[0] == k ) {
+		b->down[0] = 0;
+	} else if ( b->down[1] == k ) {
+		b->down[1] = 0;
+	} else {
+		return;     // key up without coresponding down (menu pass through)
+	}
+	if ( b->down[0] || b->down[1] ) {
+		return;     // some other key is still holding it down
+	}
+
+}
+
+cvar_t	*in_toggleCrouch;
+#endif
+
 void IN_BreakDown( void )	{ KeyDown( &in_break ); };
 void IN_BreakUp( void )	{ KeyUp( &in_break ); };
 void IN_KLookDown( void )	{ KeyDown( &in_klook ); }
@@ -404,10 +466,29 @@ void IN_Attack2Down( void )	{ KeyDown( &in_attack2 ); }
 void IN_Attack2Up( void )	{ KeyUp( &in_attack2 ); }
 void IN_UseDown( void )	{ KeyDown( &in_use ); }
 void IN_UseUp( void )	{ KeyUp( &in_use ); }
+#ifdef PANDORA
+static void IN_JumpDown( void ) {
+	if (in_toggleCrouch->value) {
+		in_duck.state = 0; KeyDown( &in_jump );
+	} else KeyDown(&in_up);
+}
+#else
 void IN_JumpDown( void )	{ KeyDown( &in_jump ); }
+#endif
 void IN_JumpUp( void )	{ KeyUp( &in_jump ); }
+#ifdef PANDORA
+static void IN_DuckDown( void ) {
+	if (in_toggleCrouch->value) ToggleKeyDown( &in_duck );
+	else KeyDown(&in_duck);
+}
+static void IN_DuckUp( void ) {
+	if (in_toggleCrouch->value) ToggleKeyUp( &in_duck );
+	else KeyUp(&in_duck);
+}
+#else
 void IN_DuckDown( void )	{ KeyDown( &in_duck ); }
 void IN_DuckUp( void )	{ KeyUp( &in_duck ); }
+#endif
 void IN_ReloadDown( void )	{ KeyDown( &in_reload ); }
 void IN_ReloadUp( void )	{ KeyUp( &in_reload ); }
 void IN_Alt1Down( void )	{ KeyDown( &in_alt1 ); }
@@ -865,6 +946,9 @@ void InitInput( void )
 	m_yaw		= CVAR_REGISTER ( "m_yaw","0.022", FCVAR_ARCHIVE );
 	m_forward		= CVAR_REGISTER ( "m_forward","1", FCVAR_ARCHIVE );
 	m_side		= CVAR_REGISTER ( "m_side","0.8", FCVAR_ARCHIVE );
+	#ifdef PANDORA
+	in_toggleCrouch = CVAR_REGISTER ( "togglecrouch", "1", FCVAR_ARCHIVE );
+	#endif
 
 	// initialize inputs
 	IN_Init();

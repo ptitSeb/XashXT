@@ -432,6 +432,10 @@ void IN_MouseMove( float frametime, usercmd_t *cmd )
 			mouse_y *= sensitivity->value;
 		}
 
+		#ifdef PANDORA
+		mouse_x *= 1.5f;	// More speed on x axis only
+		#endif
+
 		// add mouse X/Y movement to cmd
 		if(( in_strafe.state & 1 ) || ( lookstrafe->value && ( in_mlook.state & 1 )))
 			cmd->sidemove += m_side->value * mouse_x;

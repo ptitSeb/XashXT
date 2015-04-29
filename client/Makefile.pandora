@@ -1,0 +1,73 @@
+#XashXT client port for android
+#Copyright (c) nicknekit
+
+LOCAL_PATH := .
+SDL_PATH := /media/sda1/sources/git/halflife
+
+#include $(CLEAR_VARS)
+
+LOCAL_MODULE := client
+
+LOCAL_CONLYFLAGS += -std=c99
+
+LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a8 -mfpu=neon -fPIC -ffast-math -fsingle-precision-constant
+
+LOCAL_CPPFLAGS += -fpermissive -DCLIENT_DLL=1 -DPANDORA
+
+LOCAL_C_INCLUDES := -I $(SDL_PATH)/include \
+		 -I $(LOCAL_PATH)/. \
+		 -I $(LOCAL_PATH)/./render \
+		 -I $(LOCAL_PATH)/../common \
+		 -I $(LOCAL_PATH)/../engine \
+		 -I $(LOCAL_PATH)/../phys_shared \
+		 -I $(LOCAL_PATH)/../game_shared
+
+LOCAL_SRC_FILES := ammo.cpp \
+           ammo_secondary.cpp \
+           ammohistory.cpp \
+           battery.cpp \
+           cdll_int.cpp \
+           ../game_shared/common.cpp \
+           death.cpp \
+           flashlight.cpp \
+           geiger.cpp \
+           health.cpp \
+           hud.cpp \
+           hud_msg.cpp \
+           hud_redraw.cpp \
+           hud_update.cpp \
+           input.cpp \
+           inputw32.cpp \
+           ../game_shared/mathlib.cpp \
+           ../game_shared/matrix.cpp \
+           menu.cpp \
+           message.cpp \
+           motd.cpp \
+           parsemsg.cpp \
+           ../game_shared/parser.cpp \
+           ../game_shared/playermove.cpp \
+           render/r_main.cpp \
+           render/r_misc.cpp \
+           render/r_studio.cpp \
+           render/r_tempents.cpp \
+           render/r_view.cpp \
+           saytext.cpp \
+           scoreboard.cpp \
+           status_icons.cpp \
+           statusbar.cpp \
+           ../game_shared/stringlib.cpp \
+           text_message.cpp \
+           train.cpp \
+	   weapons/w_events.cpp \
+	   weapons/w_common.cpp \
+           utils.cpp
+
+LOCAL_SHARED_LIBRARIES += -lSDL2 
+
+#LOCAL_LDLIBS := -llog
+
+#include $(BUILD_SHARED_LIBRARY)
+all: $(LOCAL_MODULE).so
+
+$(LOCAL_MODULE).so: $(LOCAL_SRC_FILES)
+	gcc -shared -o $(LOCAL_MODULE).so $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) $(LOCAL_C_INCLUDES) $(LOCAL_SHARED_LIBRARIES) $(LOCAL_SRC_FILES)
