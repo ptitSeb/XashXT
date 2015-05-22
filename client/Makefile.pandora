@@ -1,4 +1,4 @@
-#XashXT client port for android
+#XashXT client port for pandora
 #Copyright (c) nicknekit
 
 LOCAL_PATH := .
@@ -13,6 +13,10 @@ LOCAL_CONLYFLAGS += -std=c99
 LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a8 -mfpu=neon -fPIC -ffast-math -fsingle-precision-constant
 
 LOCAL_CPPFLAGS += -fpermissive -DCLIENT_DLL=1 -DPANDORA
+
+ifeq ($(DEMO),1)
+        LOCAL_CFLAGS += -DHLDEMO_BUILD
+endif
 
 LOCAL_C_INCLUDES := -I $(SDL_PATH)/include \
 		 -I $(LOCAL_PATH)/. \
