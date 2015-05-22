@@ -638,7 +638,11 @@ void Joy_AdvancedUpdate_f (void)
 	{
 		// default joystick initialization
 		// 2 axes only with joystick control
+#ifdef PANDORA
+        dwAxisMap[JOY_AXIS_X] = AxisSide;
+#else
 		dwAxisMap[JOY_AXIS_X] = AxisTurn;
+#endif
 		// dwControlMap[JOY_AXIS_X] = JOY_ABSOLUTE_AXIS;
 		dwAxisMap[JOY_AXIS_Y] = AxisForward;
 		// dwControlMap[JOY_AXIS_Y] = JOY_ABSOLUTE_AXIS;
@@ -860,7 +864,11 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 		switch (dwAxisMap[i])
 		{
 		case AxisForward:
+			#ifdef PANDORA
+			if (0)
+			#else
 			if ((joy_advanced->value == 0.0) && (in_jlook.state & 1))
+			#endif
 			{
 				// user wants forward control to become look control
 				if (fabs(fAxisValue) > joy_pitchthreshold->value)
@@ -902,7 +910,11 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 		case AxisSide:
 			if (fabs(fAxisValue) > joy_sidethreshold->value)
 			{
+				#ifdef PANDORA
+                cmd->sidemove -= (fAxisValue * joy_sidesensitivity->value) * speed * cl_sidespeed->value;
+				#else
 				cmd->sidemove += (fAxisValue * joy_sidesensitivity->value) * speed * cl_sidespeed->value;
+				#endif
 			}
 			break;
 
