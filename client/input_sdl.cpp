@@ -12,7 +12,7 @@
 *   without written permission from Valve LLC.
 *
 ****/
-
+#ifdef XASH_SDL
 #include "hud.h"
 #include "utils.h"
 #include "cvardef.h"
@@ -22,7 +22,6 @@
 #include "r_view.h"
 #include "keydefs.h"
 #include <mathlib.h>
-#ifdef XASH_SDL
 #ifdef __ANDROID__
 #include <SDL_mouse.h>
 #include <SDL_gamecontroller.h>
@@ -30,13 +29,12 @@
 #include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_gamecontroller.h>
 #endif
-#endif
 #ifdef USE_EVDEV
 #define pause pause_
 #include <fcntl.h>
 #include <linux/input.h>
 #endif
-// in_win.c -- windows 95 mouse code
+// in_win.c -- SDL input code
 
 #define MOUSE_BUTTON_COUNT	5
 
@@ -74,7 +72,6 @@ static int	mouseactive;
 static int	mouseinitialized;
 static int	mouseparmsvalid;
 
-#ifdef XASH_SDL
 // joystick defines and variables
 // where should defines be moved?
 #define JOY_ABSOLUTE_AXIS	0x00000000		// control like a joystick
@@ -134,7 +131,6 @@ cvar_t	*joy_wwhack1;
 cvar_t	*joy_wwhack2;
 
 int			joy_avail, joy_advancedinit, joy_haspov;
-#endif
 #ifdef USE_EVDEV
 int evdev_open, mouse_fd, evdev_dx, evdev_dy;
 
@@ -394,7 +390,6 @@ void IN_MouseMove( float frametime, usercmd_t *cmd )
 		if ( evdev_open )
 			deltaX = evdev_dx, deltaY = evdev_dy;
 #endif
-#ifdef XASH_SDL
 #ifdef USE_EVDEV
 		else
 #endif
@@ -407,7 +402,6 @@ void IN_MouseMove( float frametime, usercmd_t *cmd )
                    my = current_pos.y + my_accum;
 
 
-#endif
 
 
 		mx_accum = 0;
@@ -494,12 +488,10 @@ void IN_Accumulate( void )
 		if ( evdev_open )
 			deltaX = evdev_dx, deltaY = evdev_dy;
 #endif
-#ifdef XASH_SDL
 #ifdef USE_EVDEV
 		else
 #endif
         	SDL_GetRelativeMouseState( &deltaX, &deltaY );
-#endif
 
 
         mx_accum += deltaX;
@@ -529,7 +521,6 @@ void IN_ClearStates( void )
 	my_accum = 0;
 	mouse_oldbuttonstate = 0;
 }
-#ifdef XASH_SDL
 void OpenJoystick ( int i )
 {
 	s_pJoystick = SDL_GameControllerOpen( i );
@@ -685,7 +676,6 @@ void Joy_AdvancedUpdate_f (void)
 	}
 }
 
-#endif
 /*
 ===========
 IN_Commands
@@ -719,7 +709,6 @@ void IN_Commands (void)
 		}
 	}
 #endif
-#ifdef XASH_SDL
 	if (!joy_avail)
 	{
 		return;
@@ -783,10 +772,8 @@ void IN_Commands (void)
 		}
 		joy_oldpovstate = povstate;
 	}
-#endif
 }
 
-#ifdef XASH_SDL
 /*
 ===============
 IN_ReadJoystick
@@ -985,7 +972,6 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 
 	gEngfuncs.SetViewAngles( (float *)viewangles );
 }
-#endif
 
 /*
 ===========
@@ -995,9 +981,7 @@ IN_Move
 void IN_Move( float frametime, usercmd_t *cmd )
 {
 	IN_MouseMove( frametime, cmd );
-#ifdef XASH_SDL
 	IN_JoyMove ( frametime, cmd);
-#endif
 }
 
 /*
@@ -1009,7 +993,6 @@ void IN_Init( void )
 {
 	m_filter		= CVAR_REGISTER ( "m_filter","0", FCVAR_ARCHIVE );
 	sensitivity	= CVAR_REGISTER ( "sensitivity","3", FCVAR_ARCHIVE ); // user mouse sensitivity setting.
-#ifdef XASH_SDL
 	in_joystick				= gEngfuncs.pfnRegisterVariable ( "joystick","0", FCVAR_ARCHIVE );
 	joy_name				= gEngfuncs.pfnRegisterVariable ( "joyname", "joystick", 0 );
 	joy_advanced			= gEngfuncs.pfnRegisterVariable ( "joyadvanced", "0", 0 );
@@ -1031,7 +1014,6 @@ void IN_Init( void )
 	joy_wwhack2				= gEngfuncs.pfnRegisterVariable ( "joywwhack2", "0.0", 0 );
 	gEngfuncs.pfnAddCommand ("joyadvancedupdate", Joy_AdvancedUpdate_f);
 	IN_StartupJoystick ();
-#endif
 	
 #ifdef USE_EVDEV
 	evdev_mousepath			= gEngfuncs.pfnRegisterVariable ( "evdev_mousepath", "", 0 );
@@ -1044,3 +1026,4 @@ void IN_Init( void )
 	IN_StartupMouse ();
 
 }
+#endif
