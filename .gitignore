@@ -1,2 +1,6 @@
-*~
-*.user
+#ignore the .o
+*.o
+*.obj
+#ignore the generated libraries also
+*.so
+*.dll
