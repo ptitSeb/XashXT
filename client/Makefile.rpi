@@ -1,4 +1,4 @@
-#XashXT client port for pandora
+#XashXT client port for RPi
 #This version (c) ptitSeb
 #Original Copyright (c) nicknekit
 
@@ -11,7 +11,7 @@ LOCAL_MODULE := client
 
 LOCAL_CONLYFLAGS += -std=c99
 
-LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a8 -mfpu=neon -fPIC -ffast-math -fsingle-precision-constant -DPANDORA -DXASH_SDL
+LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a7 -mfpu=neon -fPIC -ffast-math -fsingle-precision-constant -DXASH_SDL
 
 LOCAL_CPPFLAGS += -fpermissive -DCLIENT_DLL=1
 
