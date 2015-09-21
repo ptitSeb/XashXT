@@ -15,7 +15,8 @@
 #include <mathlib.h>
 
 #define min(a, b)  (((a) < (b)) ? (a) : (b))
-#define max(a, b) (a) > (b) ? (a) : (b)
+#define max(a, b)  (((a) > (b)) ? (a) : (b))
+
 
 // thirdperson camera
 void CAM_Think( void ) { R_ClearScene(); }
@@ -149,7 +150,7 @@ void V_PunchAxis( int axis, float punch )
 void V_Init( void )
 {
 	v_centermove	= CVAR_REGISTER( "v_centermove", "0.15", 0 );
-	v_centerspeed	= CVAR_REGISTER( "v_centerspeed","500", 0 );
+	v_centerspeed	= CVAR_REGISTER( "v_centerspeed","0", 0 );
 
 	cl_bobcycle	= CVAR_REGISTER( "cl_bobcycle","0.8", 0 );
 	cl_bob		= CVAR_REGISTER( "cl_bob","0.01", 0 );
@@ -222,7 +223,9 @@ void V_Init( void )
 
 	ADD_COMMAND( "thirdperson", V_ThirdPerson );
 	ADD_COMMAND( "firstperson", V_FirstPerson );
+#if 0
 	ADD_COMMAND( "centerview", V_StartPitchDrift );
+#endif
 }
 
 //==========================
@@ -264,7 +267,7 @@ float V_CalcBob( struct ref_params_s *pparams )
 }
 
 extern cvar_t *cl_forwardspeed;
-
+#if 0
 struct
 {
 	float	pitchvel;
@@ -301,7 +304,7 @@ void V_StopPitchDrift( void )
 	pd.nodrift = 1;
 	pd.pitchvel = 0;
 }
-
+#endif
 /*
 ===============
 V_DriftPitch
@@ -312,8 +315,10 @@ If the user is adjusting pitch manually, either with lookup/lookdown,
 mlook and mouse, or klook and keyboard, pitch drifting is constantly stopped.
 ===============
 */
+#if 0
 void V_DriftPitch( struct ref_params_s *pparams )
 {
+
 	if( gEngfuncs.IsNoClipping() || !pparams->onground || pparams->demoplayback )
 	{
 		pd.driftmove = 0;
@@ -368,8 +373,9 @@ void V_DriftPitch( struct ref_params_s *pparams )
 
 		pparams->cl_viewangles[PITCH] -= move;
 	}
-}
 
+}
+#endif
 //==========================
 // V_CalcGunAngle
 //==========================
@@ -919,7 +925,7 @@ void V_InterpolatePos( struct ref_params_s *pparams )
 //==========================
 void V_CalcFirstPersonRefdef( struct ref_params_s *pparams )
 {
-	V_DriftPitch( pparams );
+	//V_DriftPitch( pparams );
 
 	float bob = V_CalcBob( pparams );
 

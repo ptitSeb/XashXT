@@ -163,11 +163,12 @@ void IN_Move( float frametime, usercmd_t *cmd )
 	if( cl_laddermode->value !=2 ) fLadder = gEngfuncs.GetLocalPlayer()->curstate.movetype == MOVETYPE_FLY;
 	//if(ac_forwardmove || ac_sidemove)
 	//gEngfuncs.Con_Printf("Move: %f %f %f %f\n", ac_forwardmove, ac_sidemove, rel_pitch, rel_yaw);
-
+#if 0
 	if( in_mlook.state & 1 )
 	{
 		V_StopPitchDrift();
 	}
+#endif
 	if( !gHUD.m_iIntermission )
 	{
 		if( gHUD.GetSensitivity() != 0 )

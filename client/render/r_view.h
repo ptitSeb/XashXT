@@ -8,9 +8,10 @@
 #define R_VIEW_H 
 
 void V_Init( void );
+#if 0
 void V_StartPitchDrift( void );
 void V_StopPitchDrift( void );
-
+#endif
 void V_CalcFirstPersonRefdef( struct ref_params_s *pparams );
 
 #endif//R_VIEW_H

@@ -43,8 +43,8 @@ GNU General Public License for more details.
     #define GetProcAddress( x, y ) dlsym( x, y )
     #define FreeLibrary( x ) dlclose( x )
     #define MAKEWORD(a,b)   ((short int)(((unsigned char)(a))|(((short int)((unsigned char)(b)))<<8)))
-    #define max(a, b) (a) > (b) ? (a) : (b)
-    #define min(a, b) (a) > (b) ? (b) : (a)
+    #define max(a, b)  (((a) > (b)) ? (a) : (b))
+	#define min(a, b)  (((a) < (b)) ? (a) : (b))
     #define tell(a) lseek(a, 0, SEEK_CUR)
 
     typedef unsigned char   BYTE;
