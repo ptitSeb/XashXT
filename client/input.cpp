@@ -424,11 +424,12 @@ void IN_Impulse( void )	{ in_impulse = Q_atoi( CMD_ARGV( 1 )); }
 void IN_MLookUp( void )
 {
 	KeyUp( &in_mlook );
-
+#if 0
 	if(!( in_mlook.state & 1 ) && lookspring->value )
 	{
 		V_StartPitchDrift();
 	}
+#endif
 }
 
 /*
