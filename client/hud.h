@@ -19,9 +19,15 @@
 //
 // CHud handles the message, calculation, and drawing the HUD
 //
+#ifdef BSHIFT
+#define RGB_YELLOWISH 0x008080FF
+#define RGB_REDISH    0x008080FF
+#define RGB_GREENISH  0x0000A000
+#else
 #define RGB_YELLOWISH	0x00FFA000 // 255, 160, 0
 #define RGB_REDISH		0x00FF1010 // 255, 160, 0
 #define RGB_GREENISH	0x0000A000 // 0, 160, 0
+#endif
 
 #include "wrect.h"
 

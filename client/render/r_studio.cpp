@@ -574,7 +574,11 @@ void CStudioModelRenderer::StudioSetUpTransform( void )
 	if( m_pCurrentEntity->curstate.movetype == MOVETYPE_STEP ) 
 	{
 		float f;
-                    
+#ifdef BSHIFT
+		mstudioseqdesc_t		*pseqdesc;//acess to studio flags
+         
+        pseqdesc = (mstudioseqdesc_t *)((byte *)m_pStudioHeader + m_pStudioHeader->seqindex) + m_pCurrentEntity->curstate.sequence;            
+#endif
 		// don't do it if the goalstarttime hasn't updated in a while.
 		// NOTE:  Because we need to interpolate multiplayer characters, the interpolation time limit
 		//  was increased to 1.0 s., which is 2x the max lag we are accounting for.
@@ -593,8 +597,12 @@ void CStudioModelRenderer::StudioSetUpTransform( void )
 		{
 			f = 0;
 		}
-
+#ifdef BSHIFT
+		if (pseqdesc->motiontype & STUDIO_LX || m_pCurrentEntity->curstate.eflags & EFLAG_SLERP)//enable interpolation only for walk\run
+			InterpolateOrigin( m_pCurrentEntity->latched.prevorigin, m_pCurrentEntity->origin, origin, f, true );
+#else
 		InterpolateOrigin( m_pCurrentEntity->latched.prevorigin, m_pCurrentEntity->origin, origin, f, true );
+#endif
 		InterpolateAngles( m_pCurrentEntity->latched.prevangles, m_pCurrentEntity->angles, angles, f, true );
 	}
 

@@ -61,7 +61,11 @@ int CHud :: InitHUDMessages( void )
 	HOOK_MESSAGE( KillDecals );
 
 	m_iFOV = 0;
+#ifdef BSHIFT
+	m_iHUDColor = 0x008080FF;//0x00FFA000; // 255,160,0
+#else
 	m_iHUDColor = 0x00FFA000; // 255,160,0
+#endif
 	
 	CVAR_REGISTER( "zoom_sensitivity_ratio", "1.2", 0 );
 	default_fov = CVAR_REGISTER( "default_fov", "90", 0 );

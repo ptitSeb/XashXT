@@ -72,19 +72,28 @@ LOCAL_SHARED_LIBRARIES += -lSDL2
 
 OBJ_LOCAL  	:= $(LOCAL_SRC_FILES:.cpp=.o)
 
+OBJ_BSHIFT   := $(LOCAL_SRC_FILES:.cpp=.o_bs)
+
 #LOCAL_LDLIBS := -llog
 
 #include $(BUILD_SHARED_LIBRARY)
-all: $(LOCAL_MODULE).so
+all: $(LOCAL_MODULE).so $(BSHIFT_MODULE).so
 
 $(LOCAL_MODULE).so: $(OBJ_LOCAL)
 	g++ $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) $(LOCAL_SHARED_LIBRARIES) $^ -shared -o $(LOCAL_MODULE).so 
 
+$(BSHIFT_MODULE).so: $(OBJ_BSHIFT)
+	g++ $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) $(LOCAL_SHARED_LIBRARIES) -DBSHIFT $^ -shared -o $(BSHIFT_MODULE).so 
+
 %.o:  %.cpp
 	g++ $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) $(LOCAL_C_INCLUDES) -c $< -o $@
+
+%.o_bs:  %.cpp
+	g++ $(LOCAL_CFLAGS) $(LOCAL_CPPFLAGS) $(LOCAL_C_INCLUDES) -DBSHIFT -c $< -o $@
 
 .PHONY: clean
 
 clean:
-	rm -rf *.o
+	rm -rf *.o *.o_bs
 	rm $(LOCAL_MODULE).so
+	rm $(BSHIFT_MODULE).so

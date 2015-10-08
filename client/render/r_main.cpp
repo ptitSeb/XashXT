@@ -701,7 +701,9 @@ static void R_SetupFrame( void )
 	// setup viewplane dist
 	RI.viewplanedist = DotProduct( RI.refdef.vieworg, RI.vforward );
 
-	//R_AnimateLight();
+#ifdef BSHIFT
+	R_AnimateLight();
+#endif
 	R_RunViewmodelEvents();
 
 	// sort opaque entities by model type to avoid drawing model shadows under alpha-surfaces
