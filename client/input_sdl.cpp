@@ -269,7 +269,7 @@ void IN_StartupMouse( void )
 		return; 
 
 	mouseinitialized = 1;
-    #ifdef _WIN32
+#ifdef _WIN32
 	mouseparmsvalid = SystemParametersInfo( SPI_GETMOUSE, 0, originalmouseparms, 0 );
 
 	if( mouseparmsvalid )
@@ -369,17 +369,17 @@ void IN_MouseMove( float frametime, usercmd_t *cmd )
 	if( !mouseactive ) return;
 
 	gEngfuncs.GetViewAngles( viewangles );
-
+#if 0
 	if( in_mlook.state & 1 )
 	{
 		V_StopPitchDrift();
 	}
-
+#endif
 	// jjb - this disbles normal mouse control if the user is trying to 
 	// move the camera, or if the mouse cursor is visible or if we're in intermission
 	if( !gHUD.m_iIntermission )
 	{
-        #ifdef _WIN32
+#ifdef _WIN32
 		GetCursorPos( &current_pos );
 
         mx = current_pos.x - gEngfuncs.GetWindowCenterX() + mx_accum;
@@ -883,7 +883,9 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 					{
 						viewangles[PITCH] += (fAxisValue * joy_pitchsensitivity->value) * aspeed * cl_pitchspeed->value;
 					}
+#if 0
 					V_StopPitchDrift();
+#endif
 				}
 				else
 				{
@@ -891,10 +893,12 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 					// disable pitch return-to-center unless requested by user
 					// *** this code can be removed when the lookspring bug is fixed
 					// *** the bug always has the lookspring feature on
+#if 0
 					if(lookspring->value == 0.0)
 					{
 						V_StopPitchDrift();
 					}
+#endif
 				}
 			}
 			else
@@ -959,7 +963,9 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 					{
 						viewangles[PITCH] += (fAxisValue * joy_pitchsensitivity->value) * speed * 180.0;
 					}
+#if 0
 					V_StopPitchDrift();
+#endif
 				}
 				else
 				{
@@ -967,10 +973,12 @@ void IN_JoyMove ( float frametime, usercmd_t *cmd )
 					// disable pitch return-to-center unless requested by user
 					// *** this code can be removed when the lookspring bug is fixed
 					// *** the bug always has the lookspring feature on
+#if 0
 					if( lookspring->value == 0.0 )
 					{
 						V_StopPitchDrift();
 					}
+#endif
 				}
 			}
 			break;
