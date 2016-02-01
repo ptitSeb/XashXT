@@ -9,6 +9,8 @@ SDL_PATH := /media/sda1/sources/git/halflife
 
 LOCAL_MODULE := client
 
+BSHIFT_MODULE := bsclient
+
 LOCAL_CONLYFLAGS += -std=c99
 
 LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a7 -mfpu=neon -fPIC -ffast-math -fsingle-precision-constant -DXASH_SDL
