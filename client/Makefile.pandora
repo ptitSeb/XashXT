@@ -13,7 +13,7 @@ BSHIFT_MODULE := bsclient
 
 LOCAL_CONLYFLAGS += -std=c99
 
-LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -fPIC -ffast-math -fsingle-precision-constant -DPANDORA -DXASH_SDL
+LOCAL_CFLAGS += -fsigned-char -Ofast -mcpu=cortex-a8 -mfpu=neon -mfloat-abi=softfp -ftree-vectorize -fPIC -ffast-math -fsingle-precision-constant -DPANDORA -DXASH_SDL
 
 LOCAL_CPPFLAGS += -fpermissive -DCLIENT_DLL=1
 
